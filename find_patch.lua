@@ -3,6 +3,32 @@ local find_patch = {}
 find_patch.MAX_INT32 = 2147483647
 
 find_patch.range = 10000
+-----------------------------------------
+--              __USAGE__              --
+--             /find iron              --
+--               /find s               --
+-----------------------------------------
+local resources = {
+    ["i"] = "iron-ore",
+    ["iron"] = "iron-ore",
+    ["iron-ore"] = "iron-ore",
+    ["iron_ore"] = "iron-ore",
+    ["c"] = "copper-ore",
+    ["copper"] = "copper-ore",
+    ["copper-ore"] = "copper-ore",
+    ["copper_ore"] = "copper-ore",
+    ["s"] = "stone",
+    ["stone"] = "stone",
+    ["coal"] = "coal",
+    ["u"] = "uranium-ore",
+    ["uranium"] = "uranium-ore",
+    ["uranium-ore"] = "uranium-ore",
+    ["uranium_ore"] = "uranium-ore",
+    ["o"] = "crude-oil",
+    ["oil"] = "crude-oil",
+    ["crude-oil"] = "crude-oil",
+    ["crude_oil"] = "crude-oil"
+}
 
 local function round(num, dp)
     local mult = 10 ^ (dp or 0)
@@ -40,7 +66,7 @@ local colors = {
     stone = {r = 182, g = 150, b = 87},
     coal = {r = 55, g = 50, b = 40},
     uranium_ore = {r = 162, g = 249, b = 15},
-    crude_oil = {r = 144, g = 144, b = 144}
+    crude_oil = {r = 200, g = 200, b = 200}
 }
 
 function find_patch.findPatch(res_name, range, player)
@@ -83,27 +109,6 @@ function find_patch.findPatch(res_name, range, player)
     }
 end
 
-local resources = {
-    ["i"] = "iron-ore",
-    ["iron"] = "iron-ore",
-    ["iron-ore"] = "iron-ore",
-    ["iron_ore"] = "iron-ore",
-    ["c"] = "copper-ore",
-    ["copper"] = "copper-ore",
-    ["copper-ore"] = "copper-ore",
-    ["copper_ore"] = "copper-ore",
-    ["s"] = "stone",
-    ["stone"] = "stone",
-    ["coal"] = "coal",
-    ["u"] = "uranium-ore",
-    ["uranium"] = "uranium-ore",
-    ["uranium-ore"] = "uranium-ore",
-    ["uranium_ore"] = "uranium-ore",
-    ["o"] = "crude-oil",
-    ["oil"] = "crude-oil",
-    ["crude-oil"] = "crude-oil",
-    ["crude_oil"] = "crude-oil"
-}
 commands.add_command('find', 'finds the nearest patch of given resource',
                      function(command)
     local player = game.players[command.player_index]
