@@ -1,35 +1,51 @@
--- kill bugs
-local r=10 for _, bug in pairs(game.player.surface.find_entities_filtered{type="enemy", position=game.player.position, radius=r}) do bug.destroy() end
+---------------------------------------------------------------------------------------------------------
+--                                  FACTORIO USEFUL COMMANDS                                           --
+--      all of these can be used by an admin or in your single player game, through the console        --
+--              note that using any of these will disable achievements in your save                    --
+--                                                                                                     --
+--      USAGE: just copy any of the commands, no matter if they are multiple lines or single lines,    --
+-- and paste them into the console (the chat window) after typing /c (command) or /sc (silent command) --
+--                                                                                                     --
+--                          EXAMPLE: /sc game.player.force.chart_all()                                 --
+--                                                                                                     --
+---------------------------------------------------------------------------------------------------------
 
--- chart all
+-- kill bugs in radius 'r' around your player
+
+local r = 100
+for _, bug in pairs(game.player.surface.find_entities_filtered{force = "enemy", position = game.player.position, radius = r}) do
+    bug.destroy()
+end
+
+-- chart all chunks for a force
+
 game.player.force.chart_all()
 
--- get total ingredients for 1 of every item
+-- get total ingredients for 1 of every item written to "ingredients.lua" in /factorio/script-output/
+-- each item will be surrounded in [brackets], followed by it's ingredients and their amounts, and the current total of said ingredient
+-- at the bottom of the file will be the total's table
+
 local t = {}
+game.write_file("ingredients.lua", "")
+
+local function w(string)
+	game.write_file("ingredients.lua", string.."\n", true)
+end
 
 for name, item in pairs(game.item_prototypes) do
-    
-    if not t[name] then
-        t[name] = 1
-    end
-    
-    pcall(function ()
-        for _, ingredient in pairs(game.recipe_prototypes[name].ingredients) do        
-            if not t[ingredient.name] then         
-                if ingredient.amount then
+	w("["..name.."]")
+    if not t[name] then t[name] = {} end
+    pcall(function()
+        for item, _ in pairs(t) do
+            for _, ingredient in pairs(game.recipe_prototypes[item].ingredients) do
+                if not t[ingredient.name] then
                     t[ingredient.name] = ingredient.amount
                 else
-                    t[ingredient.name] = 1
-                end    
-            else        
-                if ingredient.amount then
                     t[ingredient.name] = t[ingredient.name] + ingredient.amount
-                else
-                    t[ingredient.name] = t[ingredient.name] + 1
                 end
+				w(ingredient.name.."\t+"..ingredient.amount.."\t="..t[ingredient.name])
             end
         end
     end)
 end
 
-game.write_file("ingredients.lua", serpent.block(t))
