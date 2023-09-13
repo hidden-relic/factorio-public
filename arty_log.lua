@@ -100,7 +100,7 @@ end
 local shoot_filepath = "log/shoot.log"
 
 local function add_arty_log(data)
-    game.write_file(shoot_filepath, data .. "\n", true) -- write data
+    game.write_file(shoot_filepath, data .. "\n", true, 0) -- write data
 end
 
 Event.add(defines.events.on_player_used_capsule, function(event)
