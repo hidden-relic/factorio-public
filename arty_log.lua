@@ -100,29 +100,31 @@ end
 local shoot_filepath = "log/shoot.log"
 
 local function add_arty_log(data)
-	game.write_file(shoot_filepath, data .. "\n", true) -- write data
+    game.write_file(shoot_filepath, data .. "\n", true) -- write data
 end
 
 Event.add(defines.events.on_player_used_capsule, function(event)
-    local player = game.get_player(event.player_index)
-    if arty_fire_count[player.index] then
-        local arty_fire = arty_fire_count[player.index]
-        if arty_fire.count and arty_fire.last_shot_tick then
-            if (game.tick - arty_fire.last_shot_tick) < 300 then
-                arty_fire.count = arty_fire.count + 1
+    if event.item.name == "artillery-targeting-remote" then
+        local player = game.get_player(event.player_index)
+        if arty_fire_count[player.index] then
+            local arty_fire = arty_fire_count[player.index]
+            if arty_fire.count and arty_fire.last_shot_tick then
+                if (game.tick - arty_fire.last_shot_tick) < 300 then
+                    arty_fire.count = arty_fire.count + 1
+                else
+                    arty_fire.count = 1
+                end
             else
                 arty_fire.count = 1
             end
+            arty_fire.position = pos_tostring(event.position) -- modify
+            arty_fire.last_shot_tick = game.tick
         else
-            arty_fire.count = 1
+            arty_fire_count[player.index] = {}
+            arty_fire_count[player.index].count = 1
+            arty_fire_count[player.index].position = pos_tostring(event.position) -- modify
+            arty_fire_count[player.index].last_shot_tick = game.tick
         end
-        arty_fire.position = pos_tostring(event.position) -- modify
-        arty_fire.last_shot_tick = game.tick
-    else
-        arty_fire_count[player.index] = {}
-        arty_fire_count[player.index].count = 1
-        arty_fire_count[player.index].position = pos_tostring(event.position) -- modify
-        arty_fire_count[player.index].last_shot_tick = game.tick
     end
 end)
 
